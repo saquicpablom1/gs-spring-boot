@@ -10,7 +10,7 @@ pipeline {
     }
 
     environment {
-        NEXUS_URL = "http://localhost:8081"
+        NEXUS_URL = "http://nexus:8081"
         NEXUS_REPO = "maven-releases"
         GROUP_ID = "com.example"
         ARTIFACT_ID = "gs-spring-boot"
