@@ -9,7 +9,16 @@ pipeline {
         maven '3.9.11'
     }
 
+    environment {
+        NEXUS_URL = "http://localhost:8081"
+        NEXUS_REPO = "maven-releases"
+        GROUP_ID = "com.example"
+        ARTIFACT_ID = "gs-spring-boot"
+        VERSION = "1.0.0"
+    }
+
     stages {
+
         stage('Checkout Source Code') {
             steps {
                 git branch: 'main', url: 'https://github.com/kevinli-webbertech/gs-spring-boot.git'
@@ -20,7 +29,7 @@ pipeline {
             steps {
                 sh 'git --version'
                 sh 'mvn --version'
-                sh 'mvn clean test' // Example for a Maven project
+                sh 'mvn clean test'
             }
         }
 
@@ -35,6 +44,26 @@ pipeline {
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
+
+        stage('Upload to Nexus') {
+            steps {
+                script {
+                    // Dynamically find the jar file
+                    def jarFile = sh(
+                        script: "ls target/*.jar | head -n 1",
+                        returnStdout: true
+                    ).trim()
+
+                    echo "Uploading: ${jarFile}"
+
+                    sh """
+                    curl -v -u admin:admin123 \
+                    --upload-file ${jarFile} \
+                    ${NEXUS_URL}/repository/${NEXUS_REPO}/com/example/gs-spring-boot/1.0.0/gs-spring-boot-1.0.0.jar
+                    """
+                }
+            }
+        }
     }
 
     post {
@@ -42,7 +71,7 @@ pipeline {
             echo 'Pipeline finished.'
         }
         success {
-            echo 'Build successful!'
+            echo 'Build successful and artifact uploaded to Nexus!'
         }
         failure {
             echo 'Build failed!'
