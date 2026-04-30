@@ -59,7 +59,7 @@ pipeline {
                     sh """
                     curl -v -u admin:e76beb8d-1123-496b-a89c-d0add3160d13 \
                     --upload-file ${jarFile} \
-                    ${NEXUS_URL}/repository/${NEXUS_REPO}/com/example/gs-spring-boot/1.0.0/gs-spring-boot-1.0.0.jar
+                    http://localhost:8081/repository/maven-releases/com/example/gs-spring-boot/1.0.0/gs-spring-boot-1.0.0.jar
                     """
                 }
             }
