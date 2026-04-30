@@ -10,7 +10,7 @@ pipeline {
     }
 
     environment {
-        NEXUS_URL = "http://localhost:8081"
+        NEXUS_URL = "http://nexus:8081"
         NEXUS_REPO = "maven-releases"
         GROUP_ID = "com.example"
         ARTIFACT_ID = "gs-spring-boot"
@@ -59,7 +59,7 @@ pipeline {
                     sh """
                     curl -v -u admin:e76beb8d-1123-496b-a89c-d0add3160d13 \
                     --upload-file ${jarFile} \
-                    http://localhost:8081/repository/maven-releases/com/example/gs-spring-boot/1.0.0/gs-spring-boot-1.0.0.jar
+                    http://nexus:8081/repository/maven-releases/com/example/gs-spring-boot/1.0.0/gs-spring-boot-1.0.0.jar
                     """
                 }
             }
